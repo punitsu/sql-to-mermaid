@@ -7,7 +7,7 @@
     "no-console": "warn",
     "func-names": "warn",
     "no-process-exit": "off",
-    "object-shorthand": "off",
+    "object-hand": "off",
     "class-methods-use-this": "off"
   }
 }

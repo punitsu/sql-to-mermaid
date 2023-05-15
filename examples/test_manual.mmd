@@ -1,0 +1,124 @@
+---
+title: Leave Tracker ERD
+---
+
+
+erDiagram
+
+%%TABLES
+
+    region {
+        value TEXT PK "(INDIA, USA)"
+        description TEXT
+    }
+
+    user {
+        id SERIAL PK
+        slack_id TEXT
+        external_id TEXT
+        name TEXT
+        email CITEXT PK,UK
+        region TEXT
+        created_at TIMESTAMP "timestampz = now"
+        created_by TEXT
+        updated_at TIMESTAMP "timestampz = now"
+        updated_by TEXT
+        is_admin BOOLEAN
+        is_active BOOLEAN "bool = f"
+        is_deleted BOOLEAN "bool = t"
+    }
+
+    holiday_list {
+        id SERIAL PK
+        region TEXT FK
+        name TEXT
+        holiday_date DATE
+        created_at TIMESTAMP "timestampz = now"
+        created_by TEXT
+        updated_at TIMESTAMP "timestampz = now"
+        updated_by TEXT
+        is_deleted BOOLEAN "bool = f"
+    }
+
+    credit_type {
+        value TEXT PK "(OPENING_BALANCE, COMP_OFF)"
+        description TEXT
+    }
+
+    status {
+        value TEXT PK "(APPROVED CANCELLED)"
+        description TEXT
+    }
+
+    leave_credit {
+        id SERIAL PK
+        user_id INTEGER FK
+        year SMALLINT
+        value NUMERIC "decimal(4,1)"
+        credit_type TEXT FK
+        created_at TIMESTAMP "timestampz = now"
+        created_by TEXT
+        updated_at TIMESTAMP "timestampz = now"
+        updated_by TEXT
+        is_deleted BOOLEAN "bool = f"
+    }
+
+    leave_debit {
+        id SERIAL PK
+        user_id INTEGER FK
+        year SMALLINT
+        from TIMESTAMP
+        to TIMESTAMP
+        days NUMERIC "decimal(4,1)"
+        reason TEXT
+        status TEXT FK
+        created_at TIMESTAMP "timestampz = now"
+        created_by TEXT
+        updated_at TIMESTAMP "timestampz = now"
+        updated_by TEXT
+        is_deleted BOOLEAN "bool = f"
+    }
+
+    subscriber {
+        id SERIAL PK
+        is_channel BOOLEAN "bool = t"
+        subscriber_slack_id TEXT
+        user_slack_id TEXT
+        channel_slack_id TEXT
+        created_at TIMESTAMP "timestampz = now"
+        created_by TEXT
+        updated_at TIMESTAMP "timestampz = now"
+        updated_by TEXT
+        is_deleted BOOLEAN "bool = f"
+    }
+
+    config {
+        id SERIAL PK
+        is_sync_restricted BOOLEAN "bool = t"
+        channel_slack_id TEXT
+        domain TEXT
+        leave_count INTEGER
+        is_notify_leave_remainder BOOLEAN "bool = t"
+        created_at TIMESTAMP "timestampz = now"
+        created_by TEXT
+        updated_at TIMESTAMP "timestampz = now"
+        updated_by TEXT
+        is_deleted BOOLEAN "bool = f"
+    }
+
+    vu_leave_balance {
+        user_id INTEGER
+        year SMALLINT
+        leave_count NUMERIC "decimal(4,1)"
+        balance_count NUMERIC "decimal(4,1)"
+    }
+    
+%%RELATIONSHIPS
+
+user ||--o{ leave_credit : gets
+user ||--o{ leave_debit : takes
+user ||--o{ subscriber : subscribes
+region ||--o{ user : belongs
+region ||--o{ holiday_list : has
+credit_type ||--o{ leave_credit : in
+status ||--o{ leave_debit : in

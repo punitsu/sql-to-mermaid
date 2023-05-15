@@ -1,6 +1,6 @@
 import { input, select } from '@inquirer/prompts';
-import {validatePathExistenceAndReadability} from "./utils/checkFilesAndDirs.js";
-import {parseFile} from "./engine/parseFile.js";
+import { validatePathExistenceAndReadability } from "./utils/checkFilesAndDirs.js";
+import { parseFile } from "./engine/parseFile.js";
 
 try {
     const inputPath = await input({
@@ -15,23 +15,32 @@ try {
         message: 'Which database are you using?',
         choices: [
             {
-                name: 'Postgres',
-                value: 'pg'
+                name: 'PostgresQL',
+                value: 'PostgresQL',
+                disabled: false
             },
             {
                 name: 'MySQL',
-                value: 'mysql',
+                value: 'MySQL',
+                disabled: false
+            },
+            {
+                name: 'BigQuery',
+                value: 'BigQuery',
                 disabled: true
             },
             {
-                name: 'Oracle DB',
-                value: 'oracle',
+                name: 'Hive',
+                value: 'Hive',
                 disabled: true
-            }
+            },
+            {
+                name: 'MariaDB',
+                value: 'MariaDB',
+                disabled: true
+            },
         ]
     })
-
-    parseFile(inputPath).then(r => console.log('successful'))
 
 } catch (e) {
     console.error(`Error: ${e.message}`);
